@@ -1,18 +1,264 @@
+/**********/
+/** SASS **/
+/**********/
+
+$primary: #8934ba;
+$lightPrimary: #9458c8;
+$lighterPrimary: #be7ede;
+$primaryGradient: linear-gradient(160deg, $lightPrimary 36%, #e293f3 100%);
+$disabled: #dddddd;
+
+/** SIZES **/
+
+$sizeXS: 2vw;
+$sizeS: 3vw;
+$sizeM: 5vw;
+$sizeL: 8vw;
+$sizeXL: 10vw;
+
+/** POSITIONING **/
+
+$radiusS: 7px;
+$radiusM: 10px;
+$radiusL: 20px;
+
+/** ANIMATION **/
+
+$faster: 100ms;
+$fast: 200ms;
+$slow: 300ms;
+$slower: 400ms;
+
+/********************/
+/** SEMANTIC RULES **/
+/********************/
+
 html {
+  font-size: 1rem;
+  scroll-behavior: smooth;
   text-align: center;
 }
 
 header {
-  background-color: #282c34;
-  min-height: 100vh;
+  align-items: center;
+  background-image: $primaryGradient;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+}
+
+section {
+  align-items: center;
+  background-color: black;
+  display: flex;
+  height: 95vh;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+}
+
+footer {
+  align-items: center;
+  border-top: 1px solid $primary;
+  color: white;
+  display: flex;
+  justify-content: center;
+  height: 5vh;
+  text-align: center;
+  width: 100%;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  transition: ease-in-out $faster;
+}
+a:hover {
+  text-decoration: none;
+}
+
+// button {
+//   background-color: $primary;
+//   border: none;
+//   border-radius: $radiusS;
+//   color: white;
+//   cursor: pointer;
+//   transition: ease-in-out $faster;
+//   padding: 0.5rem 1rem;
+// }
+// button:hover {
+//   background-color: white;
+//   color: $primary;
+// }
+
+input {
+  border-radius: $radiusS;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/** COLORS **/
+
+.primary {
+  color: $primary;
+}
+.lightPrimary {
+  color: $lightPrimary;
+}
+
+.white {
   color: white;
 }
 
+a.transparent {
+  background-color: transparent;
+}
+
+/** BORDERS **/
+
+.border {
+  border: 1px solid white;
+}
+
+/** SHADOWS **/
+
+// .shadowXS {
+//   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+// }
+// .shadowS {
+//   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+// }
+// .shadowM {
+//   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+// }
+// .shadowL {
+//   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+// }
+// .shadowXL {
+//   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+// }
+.shadowXS:hover, .shadowS:hover, .shadowM:hover, .shadowL:hover, .shadowXL:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+/** SIZES **/
+
+.adaptiveSize {
+  font-size: $sizeXS;
+}
+
+/** POSITIONING **/
+
+.maxHeight {
+  height: 100%;
+}
+.maxWidth {
+  width: 100%;
+}
+.expand {
+  height: 100%;
+  width: 100%;
+}
+
+.top {
+  padding: inherit;
+  position: absolute;
+  top: 0;
+}
+.center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+.bottom {
+  padding: inherit;
+  position: absolute;
+  bottom: 0;
+}
+
+.floating {
+  position: fixed;
+  right: 1%;
+  top: 1%;
+  z-index: 1;
+}
+
+.vertical {
+  vertical-align: middle;
+}
+
+/** STATES **/
+
+.disabled {
+  background-color: #dddddd;
+  cursor: not-allowed;
+}
+
+/** SPECIFIC RULES **/
+
+.anchor {
+  background-color: $lightPrimary;
+  color: white;
+}
+.anchor:hover {
+  background-color: white;
+  color: $primary;
+}
+
+.squared {
+  border-radius: $radiusS;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: $sizeS;
+  width: $sizeS;
+}
+
+.btnLike {
+  background-color: $primary;
+  color: white;
+  border-radius: $radiusS;
+  padding: 0.5rem 1rem;
+}
+.btnLike:hover {
+  background-color: white;
+  color: $primary;
+}
+
 .logo {
-  height: 40vmin;
+  background-color: #fff;
+  border-radius: $radiusL;
+  height: 15vmin;
+  padding: 1.5rem;
+}
+
+.line {
+  background-color: $primary;
+  height: 100%;
+  position: relative;
+  width: $sizeS;
+}
+
+.popover-trigger {
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: $lightPrimary;
+  position: absolute;
+  transition: ease-in-out $faster;
+  top: 100%;
+}
+.popover-trigger:hover {
+  background-color: $lightPrimary;
+  color: white;
+  transform: scale(1.1);
+}
+
+.popper {
+  background-color: $lightPrimary;
+  display: flex;
+  height: 500px;
+  width: 500px;
 }
