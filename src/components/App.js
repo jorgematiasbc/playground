@@ -1,43 +1,174 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import logo from '../img/logo.png';
 import '../../node_modules/@fortawesome/fontawesome-free/css/all.css';
 
 class App extends Component {
   state = {
-    name: ""
+    bank: {
+      coal: 100.00,
+      cheese: 100.00,
+      bikes: 100,
+      books: 100
+    },
+    corgans: [],
+    market: [],
+    name: "",
+    buyTaxes: {
+      coal: 0.75,
+      cheese: 0.15,
+      bikes: 0.15,
+      books: 0
+    },
+    sellTaxes: {
+      coal: 0.75,
+      cheese: 0.15,
+      bikes: 0.15,
+      books: 0
+    },
   };
+
+  componentDidMount() {
+    let corgan1 = {
+      name: "Foo",
+      resources: {
+        coal: 0.0,
+        cheese: 0.0,
+        bikes: 0,
+        cg: 0,
+      }
+    }
+
+    let corgan2 = {
+      name: "Bar",
+      resources: {
+        coal: 10.0,
+        cheese: 5.0,
+        bikes: 2,
+        cg: 4.12,
+      }
+    }
+
+    let corgan3 = {
+      name: "Alex",
+      resources: {
+        coal: 5.0,
+        cheese: 10.0,
+        bikes: 0,
+        cg: 50,
+      }
+    }
+
+    let offer1 = {
+      from: corgan1.name,
+      bikes: 1
+    }
+
+    let offer2 = {
+      from: corgan2.name,
+      coal: 5.0
+    }
+
+    let offer3 = {
+      // from: corgan3.name,
+      cheese: 5.0,
+    }
+
+    this.setState({
+      corgans: [corgan1, corgan2, corgan3],
+      market: [offer1, offer2, offer3]
+    });
+  }
 
   setName = () => {
     this.setState({ name: document.getElementById("name").value });
   }
 
-  showMouseMovement = (event) => {
-    // console.log(value/1103 * 2005/100);
-    let btn = document.getElementById("popover-trigger");
+  listOffers = market => {
+    return (
+      <table className="widthM">
+        <thead>
+          <tr>
+            <th colSpan={market.length}>Market Square</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {market.map((offer, key) => (
+              offer.from ? (
+                <Fragment>
+                  <td key={key}>
+                    <p>From: {offer.from}</p>
+                    {offer.coal && (
+                      <p>Coal: {offer.coal}</p>
+                    )}
+                    {offer.coal && (
+                      <p>Cheese: {offer.cheese}</p>
+                    )}
+                    {offer.coal && (
+                      <p>Bikes: {offer.bikes}</p>
+                    )}
+                    {offer.coal && (
+                      <p>CG: {offer.cg}</p>
+                    )}
+                  </td>
+                </Fragment>
+              ) : (
+                  <p className="red">Invalid offer</p>
+                )
+            ))}
+          </tr>
+          <tr>
+            <td>
+              <a>TEST</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
 
-    if (event.pageY) {
-      btn.style.top = event.pageY / 100 + "%";
-      // btn.style.top = (value/document.getElementById("line").offsetHeight * value)/100 + "%";
+  checkOffer = offer => {
+    if (offer.hasOwnProperty("bikes")) {
+
+      return;
     }
   }
 
-  togglePopper = () => {
-    let popper = document.getElementById("popper");
-
-    if (popper.style.display === "flex") popper.style.display = "none";
-    else popper.style.display = "flex";
+  checkGovernment = () => {
+    return (
+      <table className="widthM">
+        <thead>
+          <tr>
+            <th colSpan={this.state.corgans.length}>The table header</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {this.state.corgans.map((corgan, key) => (
+              <td key={key}>
+                <p>Name:  {corgan.name}</p>
+                <p>Coal:  {corgan.resources.coal}</p>
+                <p>Cheese:  {corgan.resources.cheese}</p>
+                <p>Bikes: {corgan.resources.bikes}</p>
+                <p>CG:    {corgan.resources.cg}</p>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    );
   }
 
   render() {
     return (
       <main id="wrapper">
-        <div class="floating vertical">
-          <a href="#wrapper" class="shadowS squared anchor transparent mb-2"><i class="adaptiveSize fas fa-chevron-up"></i></a>
-          <a href="#bottom" class="shadowS squared anchor transparent"><i class="adaptiveSize fas fa-chevron-down"></i></a>
+        <div className="floating vertical">
+          <a href="#wrapper" className="shadowS squared anchor transparent mb-2"><i className="adaptiveSize fas fa-chevron-up"></i></a>
+          <a href="#bottom" className="shadowS squared anchor transparent"><i className="adaptiveSize fas fa-chevron-down"></i></a>
         </div>
         <header>
           <img src={logo} className="logo" alt="logo" />
-          <h1 class="my-3">
+          <h1 className="my-3">
             {!this.state.name ?
               "What's your name ?"
               :
@@ -47,31 +178,37 @@ class App extends Component {
           <input id="name" onKeyUp={e => this.setName()} />
           <a
             href="#playground"
-            class="btnLike mt-3">
+            className="btnLike mt-3">
             <span>Proceed to playground</span>
           </a>
-          {/* <button
-            disabled={!this.state.name}>
-            <span>Proceed to playground</span>
-          </button> */}
         </header>
-        <section id="playground">
-          <div id="line" class="line" onMouseOver={e => this.showMouseMovement(e)}>
-            <button id="popover-trigger" class="popover-trigger" onClick={e => this.togglePopper()}><i class="fas fa-plus"></i></button>
-            <div id="popper">
-              <div class="">
-
-              </div>
-              <div>
-
-              </div>
-            </div>
+        <section id="playground" className="white">
+          <table className="widthM">
+            <thead>
+              <tr>
+                <th colSpan={this.state.corgans.length}>The table header</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {this.state.corgans.map((corgan, key) => (
+                  <td key={key}>
+                    <p>Name:  {corgan.name}</p>
+                    <p>Coal:  {corgan.resources.coal}</p>
+                    <p>Cheese:  {corgan.resources.cheese}</p>
+                    <p>Bikes: {corgan.resources.bikes}</p>
+                    <p>CG:    {corgan.resources.cg}</p>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            {this.listOffers(this.state.market)}
           </div>
-          {/* <h1 id="playground" className="top white">Welcome {this.state.name} !</h1>
-          <a id="playground" className="anchor"><span>Link to playground</span></a> */}
         </section>
         <footer id="bottom">
-          <a href="#wrapper" class="anchor expand center"><i class="fas fa-chevron-up mr-2"></i>Go up</a>
+          <a href="#wrapper" className="anchor expand center"><i className="fas fa-chevron-up mr-2"></i>Go up</a>
         </footer>
       </main>
     );

@@ -9,7 +9,6 @@ import 'normalize.css';
 import './styles/index.css';
 import './styles/App.scss';
 
-
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

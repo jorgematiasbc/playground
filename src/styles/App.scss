@@ -53,7 +53,7 @@ section {
   align-items: center;
   background-color: black;
   display: flex;
-  height: 95vh;
+  height: 96vh;
   justify-content: center;
   padding: 3rem;
   position: relative;
@@ -65,7 +65,7 @@ footer {
   color: white;
   display: flex;
   justify-content: center;
-  height: 5vh;
+  height: 4vh;
   text-align: center;
   width: 100%;
 }
@@ -77,6 +77,10 @@ a {
 }
 a:hover {
   text-decoration: none;
+}
+
+td {
+  border: 1px solid white;
 }
 
 // button {
@@ -111,6 +115,9 @@ input {
 .white {
   color: white;
 }
+.red {
+  color: red;
+}
 
 a.transparent {
   background-color: transparent;
@@ -144,6 +151,19 @@ a.transparent {
 }
 
 /** SIZES **/
+
+.widthS {
+  width: 25vw
+};
+.widthM {
+  width: 50vw
+};
+.widthL {
+  width: 75vw
+};
+.maxWidth {
+  width: 100vw
+};
 
 .adaptiveSize {
   font-size: $sizeXS;
