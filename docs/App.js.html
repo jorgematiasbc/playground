@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component, Fragment } from 'react';
+
+import Select from 'react-select';
+import { DateRange } from 'react-date-range';
+
+import Entry from './Entry';
+import Person from './Person';
+import Product from './Product';
+import Reservation from './Reservation';
+
+import logo from '../img/logo.png';
+import '../../node_modules/@fortawesome/fontawesome-free/css/all.css';
+
+/**
+ * Reservation of products by the client with PDF generation
+ */
+class App extends Component {
+  state = {
+    activeCalendar: null,
+    persons: [],
+    products: [],
+    reservation: null,
+    reservations: [],
+    selectedProduct: {},
+  };
+
+  componentDidMount() {
+    let person1 = new Person(1001, "Foo", "Bar");
+    let person2 = new Person(1002, "Bar", "Foo");
+    let person3 = new Person(1003, "Iron", "Man");
+
+    let product1 = new Product(1001, "Salle des fêtes", 1, "daily", 200);
+    let product2 = new Product(1002, "Chapiteau", 3, "daily", 50);
+    let product3 = new Product(1003, "Château gonflable", 2, "daily", 100);
+    let product4 = new Product(1004, "Pompe à bière", 5, "hourly", 40);
+    let product5 = new Product(1005, "Voiture électrique", 3, "hourly", 500);
+    let product6 = new Product(1006, "Cafetière", 4, "hourly", 20);
+    let product7 = new Product(1007, "Friteuse", 4, "hourly", 40);
+    let product8 = new Product(1008, "Tente SNJ", 3, "daily", 50);
+    let product9 = new Product(1009, "Podium", 1, "daily", 50);
+
+    let emptyReservation = new Reservation(person1, new Entry());
+
+    // Default reservation to override creation process
+    let reservations = [];
+    // reservations.push(new Reservation(person1, new Entry(product1, 1)));
+
+    this.setState({
+      products: [product1, product2, product3, product4, product5, product6, product7, product8, product9],
+      persons: [person1, person2, person3],
+      reservation: emptyReservation,
+      reservations: reservations
+    });
+  }
+
+  /**
+   * Set the name from the "name" DOM element
+   * TODO: try to make it more generic
+   */
+  setName = () => {
+    let persons = this.state.persons;
+    persons[0].firstname = document.getElementById("name").value;
+    persons[0].lastname = null;
+
+    this.setState({
+      name: document.getElementById("name").value,
+      persons: persons
+    });
+  }
+
+  // listReservations = reservations => {
+  //   return (
+  //     &lt;table className="widthM">
+  //       &lt;thead>
+  //         &lt;tr>
+  //           &lt;th colSpan={reservations.length}>List of rented products&lt;/th>
+  //         &lt;/tr>
+  //       &lt;/thead>
+  //       &lt;tbody>
+  //         &lt;tr>
+  //           {reservations.map((product, key) => (
+  //             product.name ? (
+  //               &lt;Fragment>
+  //                 &lt;td key={key}>
+  //                   &lt;p>Name: {product.name}&lt;/p>
+  //                   {product.maxQty &amp;&amp; (
+  //                     &lt;p>Max quantity: {product.maxQty}&lt;/p>
+  //                   )}
+  //                   {product.pricingMethod &amp;&amp; (
+  //                     &lt;p>Pricing: {product.pricingMethod}&lt;/p>
+  //                   )}
+  //                 &lt;/td>
+  //               &lt;/Fragment>
+  //             ) : (
+  //                 &lt;p className="red">Invalid product&lt;/p>
+  //               )
+  //           ))}
+  //         &lt;/tr>
+  //       &lt;/tbody>
+  //     &lt;/table>
+  //   );
+  // }
+
+  /**
+   * Adds an empty entry to the reservation
+   */
+  addItem = () => {
+    let tmp = this.state.reservation;
+    tmp.entries.push(new Entry());
+
+    this.setState({ reservation: tmp });
+  }
+
+  /**
+   * Removes an reservation's entry
+   * @param {Number} key Entry's index to be removed
+   */
+  removeItem = (key) => {
+    // let product = ;
+    // let products = this.state.products;
+    let reservation = this.state.reservation;
+    reservation.entries.splice(key, 1);
+
+    // products.value ? products.unshift(product) : null;
+
+    // let tmpReservations = this.state.reservations;
+    // tmpReservations.forEach(reservation => {
+    //   reservation.products.includes(product) ? tmpReservations.splice(key, 1) : null;
+    // })
+
+    this.setState({ reservation: reservation });
+  }
+
+  /**
+   * Handles the product selection
+   * @param {Product} product Selected product
+   * @param {Number} key Index of the selected product
+   */
+  onChangeProduct(product, key) {
+    let reservation = this.state.reservation;
+
+    if (!product) {
+      reservation.entries[key].product = null;
+      return;
+    }
+
+    let productFound = false;
+
+    // Check if product already inside one of the entries
+    for (let i = 0; i &lt; reservation.entries.length; i++) {
+      if (reservation.entries[i].product &amp;&amp; reservation.entries[i].product.id === product.id) {
+        productFound = true;
+        return;
+      }
+    }
+
+    if (productFound) return;
+
+    // If product not found inside one of the entries, add it
+    reservation.entries[key].product = product;
+
+    // Cas 1: produit ajouté et suppression     
+    // let products = this.state.products;
+    // console.log("ENTRY", document.getElementById("entry" + key).innerHTML);
+
+    // Object.is(reservation.entries[key].product, product) ?
+    //   reservation.entries[key].products.splice(reservation.entries[key].products.indexOf(product), 1)
+    //   : reservation.entries[key].products.push(product);
+
+    // products.splice(products.indexOf(product), 1);
+
+    this.setState({ reservation: reservation });
+  }
+
+  /**
+   * Handles the quantity selection
+   * @param {Event} event Contains the quantity value of the input
+   * @param {Number} maxQty Maximal quantity of a product a user can add
+   * @param {Number} key Entry's index
+   */
+  onChangeQuantity = (event, maxQty, key) => {
+    let reservation = this.state.reservation;
+
+    if (event.target.value > maxQty) {
+      alert("ERROR: Maximal number authorized: " + maxQty);
+      return;
+    }
+
+    reservation.entries[key].quantity = event.target.value;
+
+    this.setState({ reservation: reservation });
+  }
+
+  /**
+   * Opens the specified entry's calendar
+   * @param {Number} index Entry's index to identify which calendar to open
+   */
+  toggleCalendar = index => {
+    this.setState({ activeCalendar: this.state.activeCalendar === index ? null : index })
+  }
+
+  /**
+   * Handles the date changes on the object's calendar
+   * @param {Reservation} reservation Copy of the current reservation inside the state
+   * @param {Number} key Index of the selected dates
+   * @param {Object} dates Range of the selected dates
+   */
+  handleCalendar(reservation, key, dates) {
+    let copyReservation = reservation;
+
+    copyReservation.entries[key].dates.startDate = dates.startDate;
+    copyReservation.entries[key].dates.endDate = dates.endDate;
+
+    this.setState({ reservation: copyReservation });
+  }
+
+  /**
+   * Creates a reservation for the specified client
+   * @param {Person} client Person who made the reservation (null if not specified)
+   */
+  createReservation = (client = null) => {
+    if (!client) {
+      client = new Person(1001, "Foo", "Bar");
+    }
+    let reservations = this.state.reservations;
+
+    if (!this.checkReservation()) {
+      alert("Invalid reservation. Try again.");
+      return;
+    }
+
+    reservations.push(this.state.reservation);
+
+    this.setState({
+      reservation: new Reservation(client, new Entry()),
+      reservations: reservations
+    });
+  }
+
+  /**
+   * Checks if the reservation is valid
+   * @returns {Boolean} True if valid, false if not
+   */
+  checkReservation = () => {
+    let reservation = this.state.reservation;
+
+    for (let i = 0; i &lt; reservation.entries.length; i++) {
+      if (!reservation.entries[i].product || reservation.entries[i].quantity &lt; 1) return false;
+    }
+    return true;
+  }
+
+  render() {
+    console.log("RES", this.state.reservations);
+
+    let listPersons = this.state.persons.map(person => {
+      return { label: person.firstname + (person.lastname !== null ? " " + person.lastname : ""), value: person }
+    });
+    let listProducts = this.state.products.map(product => {
+      return { label: product.name, value: product }
+    });
+
+    return (
+      &lt;main id="wrapper">
+        &lt;div className="fixedTopRight vertical">
+          &lt;a href="#wrapper" className="shadowS squared anchor transparent" title="Go to top" alt="^">&lt;i className="adaptiveSize fas fa-chevron-up">&lt;/i>&lt;/a>
+          &lt;a href="#bottom" className="shadowS squared anchor transparent mt-2" title="Go to bottom">&lt;i className="adaptiveSize fas fa-chevron-down">&lt;/i>&lt;/a>
+        &lt;/div>
+        &lt;header>
+          &lt;img src={logo} className="logo" alt="logo" />
+          &lt;h1 className="my-3">
+            {!this.state.name ?
+              "What's your name ?"
+              :
+              "Welcome " + this.state.name + " !"
+            }
+          &lt;/h1>
+          &lt;input id="name" onKeyUp={e => this.setName()} />
+          &lt;a
+            href="#playground"
+            className="btnLike mt-3">
+            &lt;span>Rent your items !&lt;/span>
+          &lt;/a>
+        &lt;/header>
+        &lt;section id="playground" className="white">
+          {this.state.reservation &amp;&amp; this.state.reservation.entries &amp;&amp; this.state.reservation.entries.map((entry, key) => {
+            return (
+              &lt;Fragment key={key}>
+                &lt;form className="d-flex justify-content-between align-items-center widthL mb-3">
+                  &lt;Select
+                    className="black widthS"
+                    isSearchable
+                    onChange={target => console.log("TARGET", target)}
+                    options={listPersons}
+                    placeholder={"Select the client..."}
+                    value={entry.client &amp;&amp; entry.client.name ? { label: entry.client.firstname + " " + entry.client.name, value: entry.client } : undefined}
+                  />
+                  &lt;Select
+                    className="black widthS"
+                    isSearchable
+                    onChange={target => this.onChangeProduct(target &amp;&amp; target.value, key)}
+                    options={listProducts}
+                    placeholder={"Select a product to rent..."}
+                    value={entry.product &amp;&amp; entry.product.name ? { label: entry.product.name, value: entry.product } : undefined}
+                  />
+                  &lt;label>
+                    &lt;span>Quantity: &lt;/span>
+                    &lt;input
+                      disabled={!entry.product}
+                      min={entry.product &amp;&amp; entry.product.maxQty ? 1 : 0}
+                      max={entry.product &amp;&amp; entry.product.maxQty ? entry.product.maxQty : 0} // TODO Calcul du nombre d'items restants louables
+                      onChange={e => this.onChangeQuantity(e, entry.product.maxQty, key)}
+                      type="number"
+                      value={entry.quantity ? entry.quantity : 0}
+                    />
+                  &lt;/label>
+                  &lt;i className="fa fa-calendar-alt fa-2x pointer"
+                    onClick={() => this.toggleCalendar(key)} />
+                  {this.state.reservation.entries.length > 1 &amp;&amp; (
+                    &lt;button
+                      className="squared bgRed white"
+                      onClick={() => this.removeItem(key)}>
+                      &lt;i className="fa fa-trash" />
+                    &lt;/button>
+                  )}
+                &lt;/form>
+                {this.state.activeCalendar === key &amp;&amp; (
+                  &lt;DateRange
+                    onChange={this.handleCalendar.bind(this, this.state.reservation, key)}
+                  />
+                )}
+              &lt;/Fragment>
+            );
+          })}
+          &lt;button
+            className="align-items-center widthL mb-4 p-2"
+            onClick={() => this.addItem()}>
+            &lt;i className="fa fa-plus" />
+            &lt;span className="ml-2">Rent another item&lt;/span>
+          &lt;/button>
+          &lt;br />
+          &lt;button
+            className="p-2"
+            onClick={() => this.createReservation()}>
+            &lt;i className="fa fa-check mr-2" />&lt;span>Finish your reservation&lt;/span>
+          &lt;/button>
+
+          {this.state.reservations.length > 0 &amp;&amp; this.state.reservations.map((reservation, key) => (
+            &lt;table key={key} className="mt-5">
+              &lt;thead>
+                &lt;caption className="">{reservation.client.firstname} {reservation.client.lastname}&lt;/caption>
+                &lt;tr>
+                  &lt;th>Product&lt;/th>
+                  &lt;th>Quantity&lt;/th>
+                  &lt;th>Dates&lt;/th>
+                &lt;/tr>
+              &lt;/thead>
+              &lt;tbody>
+                {reservation.entries.map((entry, key) => (
+                  &lt;tr key={key}>
+                    &lt;td>{entry.product.name}&lt;/td>
+                    &lt;td>{entry.quantity}&lt;/td>
+                    &lt;td>{entry.dates.startDate.format("L")} - {entry.dates.endDate.format("L")}&lt;/td>
+                  &lt;/tr>
+                ))}
+              &lt;/tbody>
+            &lt;/table>
+          ))}
+
+          {/* &lt;div>
+            &lt;ul className="weekdays">
+              &lt;li>Mo&lt;/li>
+              &lt;li>Tu&lt;/li>
+              &lt;li>We&lt;/li>
+              &lt;li>Th&lt;/li>
+              &lt;li>Fr&lt;/li>
+              &lt;li>Sa&lt;/li>
+              &lt;li>Su&lt;/li>
+            &lt;/ul>
+
+            &lt;ul className="days">
+              &lt;li>1&lt;/li>
+              &lt;li>2&lt;/li>
+              &lt;li>3&lt;/li>
+              &lt;li>4&lt;/li>
+              &lt;li>5&lt;/li>
+              &lt;li>6&lt;/li>
+              &lt;li>7&lt;/li>
+              &lt;li>8&lt;/li>
+              &lt;li>9&lt;/li>
+              &lt;li>&lt;span className="active">10&lt;/span>&lt;/li>
+              &lt;li>11&lt;/li>
+              &lt;li>12&lt;/li>
+              &lt;li>13&lt;/li>
+              &lt;li>14&lt;/li>
+              &lt;li>15&lt;/li>
+              &lt;li>16&lt;/li>
+              &lt;li>17&lt;/li>
+              &lt;li>18&lt;/li>
+              &lt;li>19&lt;/li>
+              &lt;li>20&lt;/li>
+              &lt;li>21&lt;/li>
+              &lt;li>22&lt;/li>
+              &lt;li>23&lt;/li>
+              &lt;li>24&lt;/li>
+              &lt;li>25&lt;/li>
+              &lt;li>26&lt;/li>
+              &lt;li>27&lt;/li>
+              &lt;li>28&lt;/li>
+              &lt;li>29&lt;/li>
+              &lt;li>30&lt;/li>
+              &lt;li>31&lt;/li>
+            &lt;/ul>
+          &lt;/div> */}
+        &lt;/section>
+        &lt;footer id="bottom">
+          &lt;a href="#wrapper" className="anchor expand center">&lt;i className="fas fa-chevron-up mr-2">&lt;/i>Go up&lt;/a>
+        &lt;/footer>
+      &lt;/main>
+    );
+  }
+}
+
+export default App;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="Entry.html">Entry</a></li><li><a href="Person.html">Person</a></li><li><a href="Product.html">Product</a></li><li><a href="Reservation.html">Reservation</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Dec 01 2019 13:17:49 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,10 +2,10 @@
 /** SASS **/
 /**********/
 
-$primary: #8934ba;
-$lightPrimary: #9458c8;
-$lighterPrimary: #be7ede;
-$primaryGradient: linear-gradient(160deg, $lightPrimary 36%, #e293f3 100%);
+$primary: #222831;
+$lightPrimary: #393e46;
+$links: #00adb5;
+$primaryGradient: linear-gradient(160deg, $primary 36%, $lightPrimary 100%);
 $disabled: #dddddd;
 
 /** SIZES **/
@@ -20,10 +20,8 @@ $sizeXL: 10vw;
 
 $radiusS: 7px;
 $radiusM: 10px;
-$radiusL: 20px;
 
-/** ANIMATION **/
-
+$fastest: 50ms;
 $faster: 100ms;
 $fast: 200ms;
 $slow: 300ms;
@@ -51,8 +49,8 @@ header {
 
 section {
   align-items: center;
-  background-color: black;
-  display: flex;
+  background-color: $primary;
+  color: white;
   height: 96vh;
   justify-content: center;
   padding: 3rem;
@@ -61,6 +59,7 @@ section {
 
 footer {
   align-items: center;
+  background-color: $lightPrimary;
   border-top: 1px solid $primary;
   color: white;
   display: flex;
@@ -79,28 +78,58 @@ a:hover {
   text-decoration: none;
 }
 
+table {
+  font-weight: bold;
+}
+th {
+  text-align: center;
+}
 td {
   border: 1px solid white;
+  text-align: center;
+  padding: 1rem;
 }
 
-// button {
-//   background-color: $primary;
-//   border: none;
-//   border-radius: $radiusS;
-//   color: white;
-//   cursor: pointer;
-//   transition: ease-in-out $faster;
-//   padding: 0.5rem 1rem;
-// }
-// button:hover {
-//   background-color: white;
-//   color: $primary;
-// }
+hr {
+  border: 1px solid $lightPrimary;
+}
 
+button {
+  background-color: $primary;
+  border: none;
+  border-radius: $radiusS;
+  color: white;
+  transition: ease-in-out $faster;
+  padding: 0.75rem 1rem;
+}
+button:hover {
+  background-color: white;
+  color: $lightPrimary;
+}
 input {
   border-radius: $radiusS;
-  font-size: 1.5rem;
   text-align: center;
+}
+
+/*******************/
+/** NORMALIZATION **/
+/*******************/
+
+// Override of the bootstrap rule
+label {
+  margin-bottom: 0;
+}
+
+caption {
+  width: max-content;
+}
+
+input, button:focus {
+  outline: none;
+}
+
+.row {
+  margin: 0;
 }
 
 /** COLORS **/
@@ -112,15 +141,31 @@ input {
   color: $lightPrimary;
 }
 
+.black {
+  color: black;
+}
 .white {
   color: white;
 }
 .red {
   color: red;
 }
+.green {
+  color: green;
+}
 
-a.transparent {
-  background-color: transparent;
+.bgPrimary {
+  background-color: $primary;
+}
+.bgLightPrimary {
+  background-color: $lightPrimary;
+}
+
+.bgGreen {
+  background-color: green;
+}
+.bgRed {
+  background-color: red;
 }
 
 /** BORDERS **/
@@ -146,37 +191,47 @@ a.transparent {
 // .shadowXL {
 //   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 // }
-.shadowXS:hover, .shadowS:hover, .shadowM:hover, .shadowL:hover, .shadowXL:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+.shadowXS:hover,
+.shadowS:hover,
+.shadowM:hover,
+.shadowL:hover,
+.shadowXL:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 /** SIZES **/
 
+.widthXS {
+  width: 10vw;
+}
 .widthS {
-  width: 25vw
-};
+  width: 25vw;
+}
 .widthM {
-  width: 50vw
-};
+  width: 50vw;
+}
 .widthL {
-  width: 75vw
-};
+  width: 75vw;
+}
 .maxWidth {
-  width: 100vw
-};
+  width: 100vw;
+}
+.maxHeight {
+  height: 100vh;
+}
 
+.fontS {
+  font-size: smaller;
+}
+.fontL {
+  font-size: larger;
+}
 .adaptiveSize {
   font-size: $sizeXS;
 }
 
 /** POSITIONING **/
 
-.maxHeight {
-  height: 100%;
-}
-.maxWidth {
-  width: 100%;
-}
 .expand {
   height: 100%;
   width: 100%;
@@ -198,7 +253,7 @@ a.transparent {
   bottom: 0;
 }
 
-.floating {
+.fixedTopRight {
   position: fixed;
   right: 1%;
   top: 1%;
@@ -216,15 +271,25 @@ a.transparent {
   cursor: not-allowed;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 /** SPECIFIC RULES **/
 
-.anchor {
-  background-color: $lightPrimary;
-  color: white;
+#pdfPreview>iframe {
+  height: 50vh;
+  width: 100%;
 }
-.anchor:hover {
+
+.contrast {
+  background-color: transparent;
+  color: white;
+  transition: ease-in-out $fastest;
+}
+.contrast:hover {
   background-color: white;
-  color: $primary;
+  color: $lightPrimary;
 }
 
 .squared {
@@ -236,49 +301,111 @@ a.transparent {
   width: $sizeS;
 }
 
-.btnLike {
-  background-color: $primary;
-  color: white;
-  border-radius: $radiusS;
-  padding: 0.5rem 1rem;
-}
-.btnLike:hover {
-  background-color: white;
-  color: $primary;
-}
-
 .logo {
-  background-color: #fff;
-  border-radius: $radiusL;
   height: 15vmin;
-  padding: 1.5rem;
 }
 
-.line {
-  background-color: $primary;
-  height: 100%;
-  position: relative;
-  width: $sizeS;
+
+
+
+
+
+
+// Custom style calendar
+
+ul {
+  list-style-type: none;
+}
+body {
+  font-family: Verdana, sans-serif;
 }
 
-.popover-trigger {
-  background-color: white;
-  border: 2px solid white;
-  border-radius: 50%;
-  color: $lightPrimary;
-  position: absolute;
-  transition: ease-in-out $faster;
-  top: 100%;
+.month {
+  padding: 70px 25px;
+  width: 100%;
+  background: #1abc9c;
+  text-align: center;
 }
-.popover-trigger:hover {
+
+.month ul {
+  margin: 0;
+  padding: 0;
+}
+
+.month ul li {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.month .prev {
+  float: left;
+  padding-top: 10px;
+}
+
+.month .next {
+  float: right;
+  padding-top: 10px;
+}
+
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
   background-color: $lightPrimary;
   color: white;
-  transform: scale(1.1);
 }
 
-.popper {
-  background-color: $lightPrimary;
-  display: flex;
-  height: 500px;
-  width: 500px;
+.weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: white;
+  text-align: center;
+}
+
+.days {
+  padding: 10px 0;
+  background: $lightPrimary;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.6%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: white;
+}
+
+.days li .active {
+  padding: 0.5rem;
+  background: $links;
+  color: white !important;
+}
+
+/* Add media queries for smaller screens */
+@media screen and (max-width: 720px) {
+  .weekdays li,
+  .days li {
+    width: 13.1%;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .weekdays li,
+  .days li {
+    width: 12.5%;
+  }
+  .days li .active {
+    padding: 2px;
+  }
+}
+
+@media screen and (max-width: 290px) {
+  .weekdays li,
+  .days li {
+    width: 12.2%;
+  }
 }
